@@ -127,15 +127,21 @@ class Node {
         writeln("rotation check");
 
         auto tree = new Tree();
-        auto ten = tree.add(10);
+        auto fifteen = tree.add(15);
         auto eight = tree.add(8);
         auto seven = tree.add(7);
-        auto nine = tree.add(9);
+        auto eleven = tree.add(11);
+        auto ten = tree.add(10);
+        auto twelve = tree.add(12);
+
         eight.rotate(0);
 
-        assert(nine.links[0] is eight);
-        assert(nine.parent is ten, "nine parent fail");
-        assert(eight.parent is nine, "eight child of nine fail");
+        assert(eleven.links[0] is eight);
+        assert(eleven.parent is fifteen, "nine parent fail");
+        assert(eight.parent is eleven, "eight child of nine fail");
+        assert(eight.links[1] is ten);
+        assert(ten.parent is eight);
+        
     }
 
     /// left rotation.  this simulates a RB 1/2/3 left rotate on 1
