@@ -4,6 +4,17 @@ import std.stdio;
 
 class Tree {
     Node root;
+    
+    Node opIndex(size_t i) {
+        writeln("print size_t ", i);
+        return get(cast(int) i);
+    }
+    unittest {
+        auto tree = new Tree();
+        tree.add(1);
+        auto n = tree[1];
+        assert(n.value == 1);
+    }
 
     /// returns null if the node already exists
     Node add(int value) {
