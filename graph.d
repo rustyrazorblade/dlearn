@@ -1,10 +1,11 @@
 
 import std.stdio;
 
-/// T is the node type.  
+/// T is the node pk type.  
 class Vertex(T) {
     
     T id;
+    string[string] properties;
     
     this() {}
     this(T id) {
@@ -12,13 +13,19 @@ class Vertex(T) {
     }
 
     void addProperty(string k, string v) {
-
+        properties[k] = v;
     }
     T getKey() {
         return id;
     }
+    void addEdge(Vertex!T v2) {
+    }
+    
 }
 
+class Edge {
+
+}
 
 /// U is the Vertex key type
 class Graph(V : Vertex!U, U) {
@@ -55,14 +62,11 @@ unittest {
 
 unittest {
     auto g = new Graph!(IntVertex)();
-    //auto n1 = new SimpleNode(1);
-    //g.put(n1);
-    //auto n2 = new SimpleNode(2);
-    //g.put(n2);
-
-
-
+    auto v1 = new IntVertex(1);
+    auto v2 = new IntVertex(2);
+    v1.addEdge(v2);
 }
+
 
 
 void main() {
