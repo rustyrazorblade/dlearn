@@ -30,7 +30,7 @@ class Vertex(T) {
 }
 
 class Edge {
-
+    string label;
 }
 
 /// U is the Vertex key type
