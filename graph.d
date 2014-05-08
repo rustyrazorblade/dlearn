@@ -6,6 +6,9 @@ class Vertex(T) {
     
     T id;
     string[string] properties;
+
+    Vertex!T[T] out_edges;
+    Vertex!T[T] in_edges;
     
     this() {}
     this(T id) {
@@ -19,7 +22,10 @@ class Vertex(T) {
         return id;
     }
     void addEdge(Vertex!T v2) {
+        this.out_edges[v2.id] = v2;
+        v2.in_edges[this.id] = this;
     }
+
     
 }
 
