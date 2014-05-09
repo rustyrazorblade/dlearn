@@ -2,6 +2,16 @@
 import std.stdio;
 import std.container;
 
+// T is a vertex type
+class TraversalStateManager(T) {
+    T root;
+    this(T vertex) {
+        this.root = vertex;
+    }
+
+}
+
+
 /// T is the node pk type.  
 class Vertex(T) {
     
@@ -15,6 +25,8 @@ class Vertex(T) {
 
     // the edge needs the typed vertex so we alias it
     alias edge = Edge!vertex;
+
+    alias traversal = TraversalStateManager!vertex;
 
     DList!edge[] out_edges;
     DList!edge[] in_edges;
@@ -40,6 +52,9 @@ class Vertex(T) {
         v2.in_edges[this.id].insert(e);
     }
 
+    void outV(string label = null) {
+        
+    }
     
 }
 
@@ -53,7 +68,6 @@ class Edge(T) {
         this.in_v = in_v;
         this.out_v = out_v;
     }
-
 }
 
 /// U is the Vertex key type
