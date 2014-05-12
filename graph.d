@@ -8,6 +8,13 @@ class TraversalStateManager(T) {
     this(T vertex) {
         this.root = vertex;
     }
+    TraversalStateManager!T outV() {
+        return this;
+    }
+
+    TraversalStateManager!T inV() {
+        return this;
+    }
 
 }
 
@@ -52,10 +59,9 @@ class Vertex(T) {
         v2.in_edges[this.id].insert(e);
     }
 
-    void outV(string label = null) {
-        
+    traversal query() {
+        return new traversal(this);
     }
-    
 }
 
 class Edge(T) {
