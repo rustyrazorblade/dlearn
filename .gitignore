@@ -2,6 +2,7 @@ dlist
 dlist.d
 dlist.o
 graph
-graph.o
 hello
 hello.o
+lambda
+lambda.o
