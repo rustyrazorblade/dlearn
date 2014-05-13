@@ -1,6 +1,6 @@
 
 test:
-	dmd -unittest graph.d
+	dmd -unittest -debug graph.d && ./graph
 
 	
 

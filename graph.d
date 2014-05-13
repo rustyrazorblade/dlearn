@@ -10,14 +10,16 @@ class TraversalStateManager(T) {
     alias element = Element!T;
     
     T root;
-    element[][] paths;
+
+    DList!element[] paths;  // unbounded array of V1->V2->E3 type paths
 
     this(T vertex) {
         this.root = vertex;
     }
-    this(T vertex, element[][] paths) {
-        this.root = vertex;
-        this.paths = paths;
+
+    T[] vertices() {
+        T[] result;
+        return result;
     }
     // each traversal, filter, or operation should return a new instance of the state manager
 
@@ -36,12 +38,23 @@ class TraversalStateManager(T) {
     // path in the current traversal
     alias StepOperation = element[] function(element vertex);
     private sm traversal(StepOperation f) {
-        element[][] paths;
-        foreach(element[] p; this.paths) {
-            // need to look at the tail of p
-            //paths ~= f(p);
+        auto result = new sm(this.root);
+
+        foreach(path; this.paths) {
+            auto tail = path.back; // we always operate on the last element
+            auto elements = f(tail); // apply f() step operation to the tail element
+            if(elements !is null) {
+                // null means we couldn't perform the op
+                foreach(e; elements) {
+                    // we're going to get back a bunch of elements
+                    // for each element, we push a new path into the new path manager
+                    // SList.dup only duplicates pointers, not the data
+                }
+            }
+
         }
-        return new sm(this.root, paths);
+
+        return result;
     }
 
 }
@@ -66,8 +79,8 @@ class Vertex(T) : Element!T {
 
     alias traversal = TraversalStateManager!vertex;
 
-    DList!edge[] out_edges;
-    DList!edge[] in_edges;
+    DList!edge[T] out_edges;
+    DList!edge[T] in_edges;
 
     this() {}
 
@@ -83,10 +96,10 @@ class Vertex(T) : Element!T {
         return id;
     }
 
-    void addEdge(string label, Vertex!T v2) {
+    void addEdge(string label, vertex v2) {
         auto e = new edge(label, this, v2);
-        
-        this.out_edges[v2.id].insert(e);
+
+        auto tmp = this.out_edges[v2.id];//.insert(e);
         v2.in_edges[this.id].insert(e);
     }
 
@@ -160,7 +173,7 @@ unittest {
     auto v2 = g.addVertex(2);
     v1.addEdge("knows", v2);
     
-    v1.query().outV().inV();
+    v1.query().outV().vertices();
 }
 
 void main() {
