@@ -23,10 +23,16 @@ class TraversalStateManager(T) {
     }
     // each traversal, filter, or operation should return a new instance of the state manager
 
-    
     sm outV() {
-        return this;
+        // f() returns a list of elements that are outV from e.  
+        // traversal returns a new state
+        element[] f(element e) {
+            element[] result;
+            return result;
+        }
+        return this.traversal(f);
     }
+
 
     sm inV() {
         return this;
@@ -63,10 +69,9 @@ class TraversalStateManager(T) {
     // removes the need for a loop on every action, we can just
     // utilize the step.  pass a lambda.  it will be applied to every
     // path in the current traversal
-    alias StepOperation = element[] function(element vertex);
+    alias StepOperation = element[] function(element e);
     private sm traversal(StepOperation f) {
         auto result = new sm(this.root);
-        
 
         foreach(path; this.paths) {
             auto tail = path.back; // we always operate on the last element
