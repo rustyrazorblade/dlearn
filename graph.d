@@ -4,23 +4,54 @@ import std.container;
 
 // T is a vertex type
 class TraversalStateManager(T) {
+
+    alias sm = TraversalStateManager!T;
+
+    alias element = Element!T;
+    
     T root;
+    element[][] paths;
+
     this(T vertex) {
         this.root = vertex;
     }
-    TraversalStateManager!T outV() {
+    this(T vertex, element[][] paths) {
+        this.root = vertex;
+        this.paths = paths;
+    }
+    // each traversal, filter, or operation should return a new instance of the state manager
+
+    // ?
+    sm outV() {
         return this;
     }
 
-    TraversalStateManager!T inV() {
+    sm inV() {
         return this;
+    }
+
+    // step to apply to the state manager
+    // removes the need for a loop on every action, we can just
+    // utilize the step.  pass a lambda.  it will be applied to every
+    // path in the current traversal
+    alias StepOperation = element[] function(element vertex);
+    private sm traversal(StepOperation f) {
+        element[][] paths;
+        foreach(element[] p; this.paths) {
+            // need to look at the tail of p
+            //paths ~= f(p);
+        }
+        return new sm(this.root, paths);
     }
 
 }
 
+class Element(T) {
+
+}
 
 /// T is the node pk type.  
-class Vertex(T) {
+class Vertex(T) : Element!T {
     
     T id;
     string[string] properties;
@@ -64,7 +95,7 @@ class Vertex(T) {
     }
 }
 
-class Edge(T) {
+class Edge(T) : Element!T {
 
     string label;
     T in_v, out_v;
@@ -86,6 +117,11 @@ class Graph(V : Vertex!U, U) {
     }
     V get(U key) {
         return this.nodes.get(key, null);
+    }
+    Vertex!U addVertex(U id) {
+        auto v = new Vertex!U(id);
+        this.put(v);
+        return v;
     }
 }
 
@@ -117,7 +153,15 @@ unittest {
     v1.addEdge("knows", v2);
 }
 
-
+unittest {
+    // set up a simple graph
+    auto g = new Graph!IntVertex();
+    auto v1 = g.addVertex(1);
+    auto v2 = g.addVertex(2);
+    v1.addEdge("knows", v2);
+    
+    v1.query().outV().inV();
+}
 
 void main() {
     writeln("Done.");
