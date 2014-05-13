@@ -79,8 +79,10 @@ class Vertex(T) : Element!T {
 
     alias traversal = TraversalStateManager!vertex;
 
-    DList!edge[T] out_edges;
-    DList!edge[T] in_edges;
+    alias edge_list = DList!edge;
+
+    edge_list[T] out_edges;
+    edge_list[T] in_edges;
 
     this() {}
 
@@ -98,9 +100,30 @@ class Vertex(T) : Element!T {
 
     void addEdge(string label, vertex v2) {
         auto e = new edge(label, this, v2);
+        
+        edge_list* oe; // out edges
 
-        auto tmp = this.out_edges[v2.id];//.insert(e);
-        v2.in_edges[this.id].insert(e);
+        oe = (v2.id in this.out_edges);
+
+        if(oe is null) {
+            auto tmp = edge_list();
+            oe = &tmp;
+            this.out_edges[v2.id] = *oe;
+        }
+        oe.insert(e);
+
+        // set the in edge
+        edge_list* ie; // in edges
+
+        ie = (this.id in v2.in_edges);
+
+        if(ie is null) {
+            auto tmp2 = edge_list();
+            ie = &tmp2;
+            v2.in_edges[this.id] = *ie;
+        }
+        ie.insert(e);
+        //v2.in_edges.get(this.id, edge_list()).insert(e);
     }
 
     traversal query() {
@@ -172,6 +195,12 @@ unittest {
     auto v1 = g.addVertex(1);
     auto v2 = g.addVertex(2);
     v1.addEdge("knows", v2);
+
+    assert(v1.out_edges.length == 1);
+    assert(v1.in_edges.length == 0);
+
+    assert(v2.out_edges.length == 0);
+    assert(v2.in_edges.length == 1);
     
     v1.query().outV().vertices();
 }
