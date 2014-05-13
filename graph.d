@@ -23,12 +23,39 @@ class TraversalStateManager(T) {
     }
     // each traversal, filter, or operation should return a new instance of the state manager
 
-    // ?
+    
     sm outV() {
         return this;
     }
 
     sm inV() {
+        return this;
+    }
+
+    sm bothV() {
+        return this;
+    }
+    
+    sm outE() {
+        return this;
+    }
+
+    sm inE() {
+        return this;
+
+    }
+    sm bothE() {
+        return this;
+
+    }
+
+    sm label() {
+        // label a step
+        return this;
+    }
+
+    sm back() {
+        // go back to a label
         return this;
     }
 
@@ -39,6 +66,7 @@ class TraversalStateManager(T) {
     alias StepOperation = element[] function(element vertex);
     private sm traversal(StepOperation f) {
         auto result = new sm(this.root);
+        
 
         foreach(path; this.paths) {
             auto tail = path.back; // we always operate on the last element
@@ -49,6 +77,7 @@ class TraversalStateManager(T) {
                     // we're going to get back a bunch of elements
                     // for each element, we push a new path into the new path manager
                     // SList.dup only duplicates pointers, not the data
+                    result.paths[result.paths.length] = path.dup ~ [e];
                 }
             }
 
@@ -123,7 +152,6 @@ class Vertex(T) : Element!T {
             v2.in_edges[this.id] = *ie;
         }
         ie.insert(e);
-        //v2.in_edges.get(this.id, edge_list()).insert(e);
     }
 
     traversal query() {
@@ -202,7 +230,10 @@ unittest {
     assert(v2.out_edges.length == 0);
     assert(v2.in_edges.length == 1);
     
-    v1.query().outV().vertices();
+    
+    auto vertices = v1.query().outV().vertices();
+
+    // this should return an array of vertices
 }
 
 void main() {
