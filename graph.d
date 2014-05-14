@@ -26,11 +26,11 @@ class TraversalStateManager(T) {
     sm outV() {
         // f() returns a list of elements that are outV from e.  
         // traversal returns a new state
-        element[] f(element e) {
+        static element[] f(element e) {
             element[] result;
             return result;
         }
-        return this.traversal(f);
+        return this.traversal(&f);
     }
 
 
