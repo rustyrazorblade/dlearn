@@ -94,7 +94,8 @@ class TraversalStateManager(T) {
 }
 
 class Element(T) {
-
+    alias element = Element!T;
+    abstract element[] outV();
 }
 
 /// T is the node pk type.  
@@ -130,6 +131,11 @@ class Vertex(T) : Element!T {
 
     T getKey() {
         return id;
+    }
+    
+    override element[] outV() {
+        element[] elist;
+        return elist;
     }
 
     void addEdge(string label, vertex v2) {
@@ -173,6 +179,11 @@ class Edge(T) : Element!T {
         this.label = label;
         this.in_v = in_v;
         this.out_v = out_v;
+    }
+
+    override element[] outV() {
+        element[] elist;
+        return elist;
     }
 }
 
