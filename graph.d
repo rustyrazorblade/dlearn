@@ -114,10 +114,9 @@ class Vertex(T) : Element!T {
 
     alias traversal = TraversalStateManager!vertex;
 
-    alias edge_list = DList!edge;
+    alias edge_list = Array!edge;
 
-    edge_list[T] out_edges;
-    edge_list[T] in_edges;
+    edge_list[T] out_edges, in_edges;
 
     this() {}
 
@@ -135,7 +134,30 @@ class Vertex(T) : Element!T {
     
     override element[] outV() {
         element[] elist;
+        auto num = 0;
+
+        debug writeln("vertex outV");
+        
+        foreach(dlist; this.out_edges) {
+            debug writeln("iterating over out_edges");
+            foreach(edge; dlist) {
+                debug writeln("adding element");
+                elist[num] = cast(element) edge.out_v;
+                num++;
+            }
+            
+        }
         return elist;
+    }
+
+    unittest {
+        auto g = new Graph!IntVertex;
+        auto v1 = g.addVertex(1);
+        auto v2 = g.addVertex(2);
+        v1.addEdge("knows", v2);
+        auto vertices = v1.outV();
+        debug writeln("vertices length: ", vertices.length);
+        assert(vertices.length == 1);
     }
 
     void addEdge(string label, vertex v2) {
@@ -165,11 +187,33 @@ class Vertex(T) : Element!T {
         ie.insert(e);
     }
 
+    unittest {
+        // set up a simple graph
+        auto g = new Graph!IntVertex();
+        auto v1 = g.addVertex(1);
+        auto v2 = g.addVertex(2);
+        v1.addEdge("knows", v2);
+
+        assert(v1.out_edges.length == 1);
+        assert(v1.in_edges.length == 0);
+
+        assert(v1.out_edges[2].length() == 1);
+
+        assert(v2.out_edges.length == 0);
+        assert(v2.in_edges.length == 1);
+        
+        
+        auto vertices = v1.query().outV().vertices();
+
+        // this should return an array of vertices
+    }
+
     traversal query() {
         return new traversal(this);
     }
 }
 
+// T is a Vertex Type
 class Edge(T) : Element!T {
 
     string label;
@@ -233,24 +277,7 @@ unittest {
     v1.addEdge("knows", v2);
 }
 
-unittest {
-    // set up a simple graph
-    auto g = new Graph!IntVertex();
-    auto v1 = g.addVertex(1);
-    auto v2 = g.addVertex(2);
-    v1.addEdge("knows", v2);
 
-    assert(v1.out_edges.length == 1);
-    assert(v1.in_edges.length == 0);
-
-    assert(v2.out_edges.length == 0);
-    assert(v2.in_edges.length == 1);
-    
-    
-    auto vertices = v1.query().outV().vertices();
-
-    // this should return an array of vertices
-}
 
 void main() {
     writeln("Done.");
